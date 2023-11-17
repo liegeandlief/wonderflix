@@ -12,7 +12,7 @@ The following information would be useful to determine what sort of film to watc
 
 Always be concise with your messages.
 
-Once you have asked a 1-2 questions suggest 5 films`;
+Once you have asked a 1-2 questions suggest 5 films from the following list of films: %FILMS_LIST%`;
 
 export const JSON_RETURN = `Take a look at the users message.
 

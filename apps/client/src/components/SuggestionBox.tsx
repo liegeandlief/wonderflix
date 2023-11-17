@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "../helpers/cn";
+import { Link } from "react-router-dom";
 
 type SuggestionStatus = "idle" | "chatting" | "loading";
 
@@ -39,6 +40,11 @@ export function SuggestionBox() {
       setStatus("chatting");
     }
   }
+
+  let messageContent = lastAssistantMessage.content
+  try {
+    messageContent = JSON.parse(lastAssistantMessage.content)
+  } catch (_) {}
 
   return (
     <div
@@ -92,10 +98,20 @@ export function SuggestionBox() {
             />
           </svg>
 
-          {status === "loading" ? (
+          {status === "loading" && (
             <div className="border-2 border-purple-700/80 border-l-transparent w-5 h-5 rounded-full animate-spin"></div>
-          ) : (
+          )}
+          {status !== "loading" && typeof messageContent === 'string' && (
             <p className="pr-5 overflow-y-auto max-h-[300px]">{lastAssistantMessage.content}</p>
+          )}
+          {status !== "loading" && Array.isArray(messageContent) && messageContent.length && (
+            <ul>
+              {messageContent.map((item) => (
+                <li key={item}>
+                  <Link to={`/films/`} />
+                </li>
+              ))}
+            </ul>
           )}
 
           <form

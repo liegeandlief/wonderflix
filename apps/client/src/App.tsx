@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
+import { Film } from "./pages/Film";
 import { Header } from "./components/Header";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to={"/home"} />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/film/:id" element={<Film />} />
         </Routes>
       </main>
     </div>

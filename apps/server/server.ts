@@ -37,9 +37,17 @@ app.get("/get-dashboard-films", async (req, res) => {
 app.post("/get-completion", async (req, res) => {
   const { messages } = req.body;
 
+  const allFilms = await prisma.film.findMany({
+    select: {
+      title: true,
+      id: true
+    }
+  });
+  const allFilmTitles = allFilms.map(film => film.title)
+
   const chatCompletion = await getCompletion([
     {
-      content: ASSISTANT_PROMPT,
+      content: ASSISTANT_PROMPT.replace("%FILMS_LIST%", allFilmTitles.join(", ")),
       role: "system",
     },
     ...messages,
@@ -70,6 +78,20 @@ app.post("/get-completion", async (req, res) => {
         role: "user",
       },
     ]);
+
+    try {
+     const recommendationsList = JSON.parse(recommendation?.content ?? "[]") as string[]
+
+     if (Array.isArray(recommendationsList)) {
+      const recommendationsWeHave = allFilms.filter((film) => recommendationsList.includes(film.title))
+      recommendation = {
+        content: JSON.stringify(recommendationsWeHave),
+        role: "assistant"
+      }
+     }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   res.json({ message: recommendation || chatCompletion });
